@@ -6,9 +6,10 @@
 2. Súbelo a tu carpeta de Drive compartida de bases (la misma que me pasaste:
    `Bases de eventos`, id `1Fb73ensde6b_neyRUyP4L7hcW1q85iyS`).
 3. Da clic derecho sobre el archivo subido → **Abrir con → Google Sheets**.
-   Esto crea una copia nativa de Google Sheets con todas las fórmulas,
-   validaciones y formato condicional ya funcionando (probado: 875 fórmulas,
-   0 errores).
+   Esto crea una copia nativa de Google Sheets con la estructura, validaciones
+   y formato condicional ya listos. El archivo viene deliberadamente sin
+   fórmulas ni datos de catálogo precargados (para pesar poco) — Apps Script
+   los instala en el paso 4.1 de esta guía.
 4. Renombra el archivo nativo a algo como **"CRM Maestro Regcheq"** y borra
    el `.xlsx` original si ya no lo necesitas (Drive no lo actualiza solo).
 
@@ -28,6 +29,7 @@
    - `06_HubSpotSync`
    - `07_Dashboard`
    - `08_Menu`
+   - `09_InstalarFormulas`
 4. En **Configuración del proyecto** (ícono de engrane) → pega el contenido
    de `apps-script/appsscript.json` reemplazando el manifiesto por default
    (necesitas activar "Mostrar archivo de manifiesto appsscript.json" en esa
@@ -65,11 +67,20 @@ En HubSpot → Configuración → Integraciones → Apps privadas → tu app →
 1. Recarga el Google Sheet (para que aparezca el menú **Regcheq CRM**).
 2. La primera vez Google pedirá autorizar el script — es normal, acéptalo con
    tu cuenta de Regcheq.
-3. Llena una fila en `IMPORTAR BASE` apuntando a una de las bases de tu Drive
+3. **Regcheq CRM → Instalar/extender fórmulas (correr primero)** — obligatorio
+   y solo hace falta correrlo una vez (es idempotente, no rompe nada si lo
+   vuelves a correr después). Esto:
+   - Siembra el catálogo de los 14 eventos/bases encontrados en tu Drive y el
+     mapeo de los ~49 dealstages de HubSpot en `CONFIGURACIÓN`.
+   - Instala las fórmulas de `INTERACCIONES`, `CONTACTOS MAESTROS`,
+     `HUBSPOT AUDIT`, `DUPLICADOS`, `EVENTOS` y `DASHBOARD` para 2000 filas
+     de datos (ajustable en `FORMULA_DATA_ROWS`/`FORMULA_EVENT_ROWS` dentro de
+     `09_InstalarFormulas.gs` si algún día necesitas más).
+4. Llena una fila en `IMPORTAR BASE` apuntando a una de las bases de tu Drive
    y corre **Regcheq CRM → Importar nueva base**.
-4. Corre **Regcheq CRM → Actualizar HubSpot** para cruzar los contactos
+5. Corre **Regcheq CRM → Actualizar HubSpot** para cruzar los contactos
    importados contra tu portal.
-5. Revisa `DASHBOARD` — ya debería mostrar KPIs reales.
+6. Revisa `DASHBOARD` — ya debería mostrar KPIs reales.
 
 ## 5. Revisión de scopes/pipelines pendiente
 

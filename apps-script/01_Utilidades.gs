@@ -19,22 +19,6 @@ function lastDataRow_(sheet) {
   return 1; // solo encabezado
 }
 
-/** Copia las fórmulas (no los valores) de templateRow hacia targetRow, misma hoja. */
-function copyRowFormulas_(sheet, templateRow, targetRow) {
-  const lastCol = sheet.getLastColumn();
-  const src = sheet.getRange(templateRow, 1, 1, lastCol);
-  const dst = sheet.getRange(targetRow, 1, 1, lastCol);
-  src.copyTo(dst, { formatOnly: false, contentsOnly: false });
-  // copyTo también trae valores literales de la fila plantilla; los limpiamos
-  // en las columnas que NO son fórmula para no arrastrar datos de ejemplo.
-  const formulas = src.getFormulas()[0];
-  const values = dst.getValues();
-  for (let c = 0; c < lastCol; c++) {
-    if (!formulas[c]) values[0][c] = '';
-  }
-  dst.setValues(values);
-}
-
 /** Genera el siguiente ID consecutivo tipo PREFIJO-000123 buscando el máximo actual. */
 function nextId_(sheet, column, prefix, padLength) {
   const lastRow = lastDataRow_(sheet);

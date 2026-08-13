@@ -28,8 +28,8 @@ red_font = Font(name=FONT_NAME, size=10, color="9C0006")
 thin = Side(style="thin", color="BFBFBF")
 border = Border(left=thin, right=thin, top=thin, bottom=thin)
 
-DATA_ROWS = 20          # filas con formulas precargadas en tablas principales
-EVENT_ROWS = 25          # filas con formulas precargadas en EVENTOS
+DATA_ROWS = 2          # filas con formulas precargadas en tablas principales
+EVENT_ROWS = 2          # filas con formulas precargadas en EVENTOS
 
 TIPOS_ORIGEN = ["Evento", "Webinar", "Webinar con aliado", "Evento de aliado", "Otro"]
 ESTATUS_LIST = [
@@ -100,82 +100,17 @@ ws.column_dimensions["A"].width = 118
 lines = [
     ("Regcheq — CRM Maestro de Leads, Eventos y Auditoría HubSpot", title_font),
     ("", normal_font),
-    ("Qué es este archivo", subtitle_font),
-    ("Fuente única de verdad para todos los contactos generados por Marketing y Alianzas (eventos, webinars "
-     "propios y con aliados, bases históricas) cruzados contra HubSpot. Las pestañas DASHBOARD, CONTACTOS "
-     "MAESTROS (columnas de HubSpot) y HUBSPOT AUDIT se calculan solas — no se editan a mano.", normal_font),
+    ("Fuente única de verdad para los contactos de Marketing y Alianzas, cruzada contra HubSpot. "
+     "DASHBOARD, CONTACTOS MAESTROS (columnas de HubSpot) y HUBSPOT AUDIT se calculan solas — no se "
+     "editan a mano.", normal_font),
     ("", normal_font),
-    ("Estructura de pestañas", subtitle_font),
-    ("• DASHBOARD — KPIs generales, por origen y por SDR. Filtrar con las celdas de la parte superior.", normal_font),
-    ("• CONTACTOS MAESTROS — un contacto único por fila (Master Contact ID). Las columnas de HubSpot/estatus "
-     "son fórmulas que leen HUBSPOT AUDIT.", normal_font),
-    ("• INTERACCIONES / ORÍGENES — un renglón por cada aparición de un contacto en una base/evento. Un mismo "
-     "contacto puede tener varias filas aquí; nunca se crea un contacto maestro nuevo por cada aparición.", normal_font),
-    ("• EVENTOS — catálogo de eventos, webinars y bases de aliados. Ya viene pre-cargado con las carpetas "
-     "encontradas en tu Drive compartido.", normal_font),
-    ("• BASES ORIGINALES — trazabilidad de cada archivo importado.", normal_font),
-    ("• DUPLICADOS — pares de contactos en revisión. Nunca se fusiona nada automáticamente.", normal_font),
-    ("• HUBSPOT AUDIT — una fila por Master Contact ID con lo que Apps Script trae de HubSpot en cada "
-     "sincronización. Fuente de verdad de todo lo relacionado a HubSpot.", normal_font),
-    ("• IMPORTAR BASE — formulario para dar de alta una nueva base antes de correr el importador.", normal_font),
-    ("• CONFIGURACIÓN — SDRs, sinónimos de columnas, mapeo de pipelines/dealstages, umbrales de alerta, "
-     "propiedades de HubSpot a consultar. Editable sin tocar código.", normal_font),
+    ("Primer paso obligatorio: Menú Regcheq CRM → 'Instalar/extender fórmulas'.", subtitle_font),
     ("", normal_font),
-    ("Cómo importar una nueva base", subtitle_font),
-    ("1. Si el evento es nuevo, agrégalo primero en EVENTOS (siguiente Event ID consecutivo).", normal_font),
-    ("2. Llena una fila en IMPORTAR BASE: liga o ID del Google Sheet origen, nombre de la pestaña, Evento "
-     "asociado, Tipo de origen, Aliado, fechas y fuente.", normal_font),
-    ("3. Menú Regcheq CRM → Importar nueva base. El script detecta encabezados (usando los sinónimos de "
-     "CONFIGURACIÓN), normaliza, deduplica contra CONTACTOS MAESTROS y llena INTERACCIONES, BASES ORIGINALES "
-     "y EVENTOS.", normal_font),
-    ("4. Columnas que no se puedan mapear se reportan en la columna Resultado de IMPORTAR BASE — revísalas y "
-     "agrega el sinónimo en CONFIGURACIÓN si aplica.", normal_font),
+    ("Documentación completa (arquitectura, instrucciones paso a paso, cómo importar/sincronizar/revisar "
+     "duplicados) en el repositorio de git: docs/INSTRUCCIONES_SETUP.md y docs/arquitectura.md.", normal_font),
     ("", normal_font),
-    ("Cómo actualizar HubSpot", subtitle_font),
-    ("1. Menú Regcheq CRM → Actualizar HubSpot.", normal_font),
-    ("2. El script busca cada Master Contact ID por email, trae propiedades/empresa/deals/SDR/actividad y "
-     "llena HUBSPOT AUDIT (usa las propiedades listadas en CONFIGURACIÓN).", normal_font),
-    ("3. CONTACTOS MAESTROS lee esos datos automáticamente vía fórmulas — no hace falta tocar nada ahí.", normal_font),
-    ("4. Se registra fecha, # de registros actualizados, errores y no-encontrados al fondo de CONFIGURACIÓN.", normal_font),
-    ("", normal_font),
-    ("Cómo revisar duplicados", subtitle_font),
-    ("1. Menú Regcheq CRM → Detectar duplicados (también corre automáticamente en cada importación).", normal_font),
-    ("2. Revisa DUPLICADOS: cada par indica tipo de coincidencia (fuerte/media/débil), campo que generó la "
-     "coincidencia y una acción recomendada.", normal_font),
-    ("3. Marca Estatus de revisión (Confirmado duplicado / Falso positivo / Fusionado). Fusionar mueve las "
-     "interacciones de un Master Contact ID al otro — hazlo solo desde el menú, nunca a mano.", normal_font),
-    ("", normal_font),
-    ("Cómo interpretar el dashboard", subtitle_font),
-    ("Los KPIs de 'Registros/orígenes' en adelante respetan los 5 filtros superiores (Evento, Aliado, SDR, "
-     "Tipo de origen, Estatus). 'Total de contactos únicos' y 'Duplicados detectados' son globales (no se "
-     "filtran) porque un contacto puede pertenecer a varios orígenes a la vez. 'Contactados' = tiene algún "
-     "estatus de trabajo activo (Contactado/Respondió/Reunión agendada/Convertido); 'No contactados' = está "
-     "en HubSpot y asignado pero sin ningún estatus de trabajo aún.", normal_font),
-    ("", normal_font),
-    ("Cómo agregar un nuevo evento", subtitle_font),
-    ("Agrega una fila en EVENTOS con un Event ID nuevo (EV-0XX consecutivo). No requiere tocar código.", normal_font),
-    ("", normal_font),
-    ("Cómo agregar nuevos campos", subtitle_font),
-    ("Agrega la columna al final de la pestaña correspondiente. Si depende de HubSpot, agrega la propiedad en "
-     "el bloque 'Propiedades HubSpot a consultar' de CONFIGURACIÓN — Apps Script la trae en la siguiente "
-     "sincronización sin cambios de código.", normal_font),
-    ("", normal_font),
-    ("Cómo corregir errores", subtitle_font),
-    ("Los errores de importación quedan en IMPORTAR BASE (columna Resultado); los de sincronización, al fondo "
-     "de CONFIGURACIÓN en 'Registro de sincronizaciones'. Corrige y vuelve a correr el menú correspondiente.", normal_font),
-    ("", normal_font),
-    ("Nota sobre las fórmulas al crecer la base", subtitle_font),
-    ("Las pestañas con fórmulas (INTERACCIONES, CONTACTOS MAESTROS, HUBSPOT AUDIT, DUPLICADOS, EVENTOS) "
-     "vienen precargadas con fórmulas solo en las primeras filas de ejemplo. El importador de Apps Script "
-     "copia automáticamente las fórmulas de la fila anterior hacia cada fila nueva que agrega — no hace "
-     "falta arrastrar nada a mano. Si algún día editas una fila manualmente y necesitas restaurar sus "
-     "fórmulas, copia cualquier fila existente de esa misma pestaña y pégala (solo fórmulas) sobre la fila "
-     "afectada.", normal_font),
-    ("", normal_font),
-    ("Seguridad del token de HubSpot", subtitle_font),
-    ("El token (Private App) NUNCA se guarda en una celda de este Sheet ni en el código fuente. Se guarda una "
-     "sola vez en Extensiones → Apps Script → Configuración del proyecto → Propiedades del script, con la "
-     "clave HUBSPOT_TOKEN. Ver INSTRUCCIONES_SETUP.md en el repositorio para el paso a paso completo.", normal_font),
+    ("Seguridad del token de HubSpot: se guarda una sola vez en Extensiones → Apps Script → Configuración "
+     "del proyecto → Propiedades del script, con la clave HUBSPOT_TOKEN. Nunca en una celda ni en el código.", normal_font),
 ]
 r = 1
 for text, font in lines:
@@ -321,17 +256,10 @@ dealstages_by_pipeline = {
                   ("121998768", "Propuesta Enviada"), ("121998770", "Propuesta Aceptada"),
                   ("121998771", "Anexo Firmado")],
 }
-pipeline_name_by_id = {pid: name for name, pid in pipelines}
-for pid, stages in dealstages_by_pipeline.items():
-    pname = pipeline_name_by_id.get(pid, pid)
-    for sid, slabel in stages:
-        cfg.cell(row=row, column=1, value=pname).font = normal_font
-        cfg.cell(row=row, column=2, value=sid).font = normal_font
-        cfg.cell(row=row, column=3, value=slabel).font = normal_font
-        cfg.cell(row=row, column=4, value=stage_map(slabel)).font = normal_font
-        row += 1
-DEALSTAGE_LAST_ROW = row - 1
-list_dv(cfg, f"D{DEALSTAGE_FIRST_ROW}:D{DEALSTAGE_LAST_ROW}", ESTATUS_LIST, strict=False)
+# Las 49 filas de mapeo Pipeline/Stage ID/Estatus las siembra Apps Script la primera vez que
+# corres "Instalar/extender fórmulas" (ver sembrarDealstages_ en apps-script/09_InstalarFormulas.gs) —
+# aquí solo dejamos el encabezado para que el archivo pese poco.
+list_dv(cfg, f"D{DEALSTAGE_FIRST_ROW}:D{DEALSTAGE_FIRST_ROW+60}", ESTATUS_LIST, strict=False)
 row += 1
 
 cfg.cell(row=row, column=1, value="Alertas").font = subtitle_font
@@ -414,26 +342,11 @@ eventos_seed = [
     ("EV-014", "Exportación HubSpot — Contactos que han enviado formulario, con empresa (2025-04-04)", "Otro",
      "", "", "https://docs.google.com/spreadsheets/d/1e83qhK2sVOHA9vw1LD9xK6wbzI-URpO3WhaECqtaX_g/edit"),
 ]
-r = 2
-for eid, nombre, tipo, aliado, fecha, liga in eventos_seed:
-    ev.cell(row=r, column=1, value=eid)
-    ev.cell(row=r, column=2, value=nombre)
-    ev.cell(row=r, column=3, value=tipo)
-    ev.cell(row=r, column=4, value=aliado)
-    ev.cell(row=r, column=5, value=fecha)
-    ev.cell(row=r, column=9, value=liga)
-    ev.cell(row=r, column=16, value="Pendiente de importar")
-    r += 1
-EVENTOS_SEED_LAST_ROW = r - 1
+# Las 14 filas de eventos precargados las siembra Apps Script la primera vez que corres
+# "Instalar/extender fórmulas" (ver sembrarEventos_ en apps-script/09_InstalarFormulas.gs) —
+# aquí solo dejamos el encabezado para que el archivo pese poco.
+EVENTOS_SEED_LAST_ROW = 1
 
-for rr in range(2, EVENT_ROWS + 2):
-    ev.cell(row=rr, column=11, value=f"=IFERROR(COUNTIF(INTERACCIONES!$C$2:$C$21,$A{rr}),0)")
-    ev.cell(row=rr, column=12, value=(
-        f"=IFERROR(COUNTIF(DUPLICADOS!$J$2:$J$21,$B{rr})+COUNTIF(DUPLICADOS!$K$2:$K$21,$B{rr}),0)"))
-    ev.cell(row=rr, column=13, value=(
-        f"=IFERROR(COUNTIFS(INTERACCIONES!$C$2:$C$21,$A{rr},INTERACCIONES!$M$2:$M$21,\"Sí\"),0)"))
-    ev.cell(row=rr, column=14, value=(
-        f"=IFERROR(COUNTIFS(INTERACCIONES!$C$2:$C$21,$A{rr},INTERACCIONES!$M$2:$M$21,\"No\"),0)"))
 style_rows(ev, len(ev_headers), 2, EVENT_ROWS + 1)
 list_dv(ev, f"C2:C{EVENT_ROWS+1}", TIPOS_ORIGEN)
 print("EVENTOS listo,", EVENTOS_SEED_LAST_ROW - 1, "eventos precargados")
@@ -448,10 +361,10 @@ bo_headers = ["Base ID", "Nombre de base", "Fuente", "URL o ID origen", "Fecha d
 bo_widths = [10, 40, 16, 34, 16, 16, 12, 16, 14, 14, 16, 34]
 write_headers(bo, bo_headers, widths=bo_widths)
 bo.sheet_properties.tabColor = "808080"
-list_dv(bo, "C2:C500", ["Google Sheets", "HubSpot export", "Otro"])
-list_dv(bo, "K2:K500", ["OK", "Con errores"])
-range_dv(bo, "J2:J500", f"=EVENTOS!$A$2:$A${EVENT_ROWS+1}")
-style_rows(bo, len(bo_headers), 2, 500)
+list_dv(bo, "C2:C15", ["Google Sheets", "HubSpot export", "Otro"])
+list_dv(bo, "K2:K15", ["OK", "Con errores"])
+range_dv(bo, "J2:J15", f"=EVENTOS!$A$2:$A${EVENT_ROWS+1}")
+style_rows(bo, len(bo_headers), 2, 15)
 
 # =============================================================================
 # IMPORTAR BASE
@@ -463,10 +376,10 @@ ib_headers = ["URL o ID del Google Sheet", "Nombre de la pestaña", "Evento asoc
 ib_widths = [40, 20, 20, 18, 16, 16, 16, 34, 14, 46]
 write_headers(ib, ib_headers, widths=ib_widths)
 ib.sheet_properties.tabColor = "2E75B6"
-range_dv(ib, f"C2:C200", f"=EVENTOS!$A$2:$A${EVENT_ROWS+1}")
-list_dv(ib, "D2:D200", TIPOS_ORIGEN)
-list_dv(ib, "I2:I200", ["Pendiente", "Procesando", "Completado", "Error"])
-style_rows(ib, len(ib_headers), 2, 200)
+range_dv(ib, f"C2:C10", f"=EVENTOS!$A$2:$A${EVENT_ROWS+1}")
+list_dv(ib, "D2:D10", TIPOS_ORIGEN)
+list_dv(ib, "I2:I10", ["Pendiente", "Procesando", "Completado", "Error"])
+style_rows(ib, len(ib_headers), 2, 10)
 
 # =============================================================================
 # INTERACCIONES / ORIGENES
@@ -481,21 +394,6 @@ it_widths = [14, 16, 10, 30, 16, 16, 14, 14, 10, 12, 26, 18, 14, 16, 14, 18, 14]
 write_headers(it, it_headers, widths=it_widths)
 it.sheet_properties.tabColor = "2E75B6"
 
-for r in range(2, DATA_ROWS + 2):
-    it.cell(row=r, column=4, value=f'=IFERROR(INDEX(EVENTOS!$B$2:$B$26,MATCH($C{r},EVENTOS!$A$2:$A$26,0)),"")')
-    it.cell(row=r, column=5, value=f'=IFERROR(INDEX(EVENTOS!$C$2:$C$26,MATCH($C{r},EVENTOS!$A$2:$A$26,0)),"")')
-    it.cell(row=r, column=6, value=f'=IFERROR(INDEX(EVENTOS!$D$2:$D$26,MATCH($C{r},EVENTOS!$A$2:$A$26,0)),"")')
-    it.cell(row=r, column=7, value=f'=IFERROR(INDEX(EVENTOS!$E$2:$E$26,MATCH($C{r},EVENTOS!$A$2:$A$26,0)),"")')
-    it.cell(row=r, column=13, value=(
-        f"=IFERROR(INDEX('HUBSPOT AUDIT'!$B$2:$B$21,MATCH($B{r},'HUBSPOT AUDIT'!$A$2:$A$21,0)),\"\")"))
-    it.cell(row=r, column=14, value=(
-        f"=IFERROR(INDEX('HUBSPOT AUDIT'!$J$2:$J$21,MATCH($B{r},'HUBSPOT AUDIT'!$A$2:$A$21,0)),\"\")"))
-    it.cell(row=r, column=15, value=(
-        f"=IFERROR(INDEX('HUBSPOT AUDIT'!$L$2:$L$21,MATCH($B{r},'HUBSPOT AUDIT'!$A$2:$A$21,0)),\"\")"))
-    it.cell(row=r, column=16, value=(
-        f"=IFERROR(INDEX('HUBSPOT AUDIT'!$R$2:$R$21,MATCH($B{r},'HUBSPOT AUDIT'!$A$2:$A$21,0)),\"\")"))
-    it.cell(row=r, column=17, value=(
-        f"=IF(IFERROR(INDEX('HUBSPOT AUDIT'!$H$2:$H$21,MATCH($B{r},'HUBSPOT AUDIT'!$A$2:$A$21,0)),\"\")<>\"\",\"Sí\",\"No\")"))
 style_rows(it, len(it_headers), 2, DATA_ROWS + 1)
 for col in ("M", "N", "O", "P", "Q"):
     it.column_dimensions[col].width = 16
@@ -515,15 +413,6 @@ ha_widths = [16, 14, 16, 34, 26, 16, 26, 14, 14, 18, 14, 12, 12, 16, 18, 16, 12,
 write_headers(ha, ha_headers, widths=ha_widths)
 ha.sheet_properties.tabColor = "C00000"
 
-for r in range(2, DATA_ROWS + 2):
-    ha.cell(row=r, column=17, value=f'=IF($P{r}="","",TODAY()-$P{r})')
-    ha.cell(row=r, column=20, value=(
-        f'=IF($B{r}<>"Sí","🔴 No está en HubSpot",'
-        f'IF($I{r}="No","🔴 Sin SDR asignado",'
-        f'IF($L{r}="No","🔴 Sin actividad registrada",'
-        f'IF(AND(ISNUMBER($Q{r}),$Q{r}>={ALERT_RED_CELL}),"🔴 "&$Q{r}&" días sin contacto",'
-        f'IF(AND(ISNUMBER($Q{r}),$Q{r}>={ALERT_YELLOW_CELL}),"🟡 "&$Q{r}&" días sin contacto",'
-        f'"🟢 Al corriente")))))'))
 style_rows(ha, len(ha_headers), 2, DATA_ROWS + 1)
 list_dv(ha, f"S2:S{DATA_ROWS+1}", ["Automático", "Revisión manual"])
 list_dv(ha, f"R2:R{DATA_ROWS+1}", ESTATUS_LIST)
@@ -559,15 +448,6 @@ du_widths = [10, 16, 16, 16, 26, 26, 14, 16, 16, 26, 26, 20, 30, 16, 16]
 write_headers(du, du_headers, widths=du_widths)
 du.sheet_properties.tabColor = "C00000"
 
-for r in range(2, DATA_ROWS + 2):
-    du.cell(row=r, column=8, value=(
-        f"=IFERROR(INDEX('HUBSPOT AUDIT'!$C$2:$C$21,MATCH($B{r},'HUBSPOT AUDIT'!$A$2:$A$21,0)),\"\")"))
-    du.cell(row=r, column=9, value=(
-        f"=IFERROR(INDEX('HUBSPOT AUDIT'!$C$2:$C$21,MATCH($C{r},'HUBSPOT AUDIT'!$A$2:$A$21,0)),\"\")"))
-    du.cell(row=r, column=10, value=(
-        f"=IFERROR(INDEX(INTERACCIONES!$D$2:$D$21,MATCH($B{r},INTERACCIONES!$B$2:$B$21,0)),\"\")"))
-    du.cell(row=r, column=11, value=(
-        f"=IFERROR(INDEX(INTERACCIONES!$D$2:$D$21,MATCH($C{r},INTERACCIONES!$B$2:$B$21,0)),\"\")"))
 style_rows(du, len(du_headers), 2, DATA_ROWS + 1)
 list_dv(du, f"D2:D{DATA_ROWS+1}", ["fuerte", "media", "débil"])
 list_dv(du, f"L2:L{DATA_ROWS+1}", ["Pendiente", "Confirmado duplicado", "Falso positivo", "Fusionado"])
@@ -591,40 +471,6 @@ cm_widths = [16, 16, 16, 22, 26, 26, 26, 16, 16, 20, 16, 16, 16, 16, 16, 14, 14,
 write_headers(cm, cm_headers, widths=cm_widths)
 cm.sheet_properties.tabColor = NAVY
 
-for r in range(2, DATA_ROWS + 2):
-    cm.cell(row=r, column=4, value=f'=IF(AND($B{r}="",$C{r}=""),"",TRIM($B{r}&" "&$C{r}))')
-    cm.cell(row=r, column=14, value=(
-        f"=IFERROR(INDEX('HUBSPOT AUDIT'!$C$2:$C$21,MATCH($A{r},'HUBSPOT AUDIT'!$A$2:$A$21,0)),\"\")"))
-    cm.cell(row=r, column=15, value=(
-        f"=IFERROR(INDEX('HUBSPOT AUDIT'!$F$2:$F$21,MATCH($A{r},'HUBSPOT AUDIT'!$A$2:$A$21,0)),\"\")"))
-    cm.cell(row=r, column=16, value=(
-        f"=IFERROR(INDEX('HUBSPOT AUDIT'!$H$2:$H$21,MATCH($A{r},'HUBSPOT AUDIT'!$A$2:$A$21,0)),\"\")"))
-    cm.cell(row=r, column=17, value=(
-        f"=IFERROR(INDEX('HUBSPOT AUDIT'!$B$2:$B$21,MATCH($A{r},'HUBSPOT AUDIT'!$A$2:$A$21,0)),\"\")"))
-    cm.cell(row=r, column=18, value=(
-        f"=IFERROR(INDEX('HUBSPOT AUDIT'!$D$2:$D$21,MATCH($A{r},'HUBSPOT AUDIT'!$A$2:$A$21,0)),\"\")"))
-    cm.cell(row=r, column=19, value=(
-        f"=IFERROR(INDEX('HUBSPOT AUDIT'!$J$2:$J$21,MATCH($A{r},'HUBSPOT AUDIT'!$A$2:$A$21,0)),\"\")"))
-    cm.cell(row=r, column=20, value=(
-        f"=IFERROR(INDEX('HUBSPOT AUDIT'!$I$2:$I$21,MATCH($A{r},'HUBSPOT AUDIT'!$A$2:$A$21,0)),\"\")"))
-    cm.cell(row=r, column=21, value=(
-        f"=IFERROR(INDEX('HUBSPOT AUDIT'!$L$2:$L$21,MATCH($A{r},'HUBSPOT AUDIT'!$A$2:$A$21,0)),\"\")"))
-    cm.cell(row=r, column=22, value=(
-        f"=IFERROR(INDEX('HUBSPOT AUDIT'!$M$2:$M$21,MATCH($A{r},'HUBSPOT AUDIT'!$A$2:$A$21,0)),\"\")"))
-    cm.cell(row=r, column=23, value=(
-        f"=IFERROR(INDEX('HUBSPOT AUDIT'!$N$2:$N$21,MATCH($A{r},'HUBSPOT AUDIT'!$A$2:$A$21,0)),\"\")"))
-    cm.cell(row=r, column=24, value=(
-        f"=IFERROR(INDEX('HUBSPOT AUDIT'!$O$2:$O$21,MATCH($A{r},'HUBSPOT AUDIT'!$A$2:$A$21,0)),\"\")"))
-    cm.cell(row=r, column=25, value=(
-        f"=IFERROR(INDEX('HUBSPOT AUDIT'!$P$2:$P$21,MATCH($A{r},'HUBSPOT AUDIT'!$A$2:$A$21,0)),\"\")"))
-    cm.cell(row=r, column=26, value=(
-        f"=IFERROR(INDEX('HUBSPOT AUDIT'!$R$2:$R$21,MATCH($A{r},'HUBSPOT AUDIT'!$A$2:$A$21,0)),\"\")"))
-    cm.cell(row=r, column=27, value=f'=IFERROR(COUNTIF(INTERACCIONES!$B$2:$B$21,$A{r}),0)')
-    cm.cell(row=r, column=28, value=f'=IFERROR(COUNTIF(INTERACCIONES!$B$2:$B$21,$A{r}),0)')
-    cm.cell(row=r, column=29, value=(
-        f'=IF(COUNTIF(DUPLICADOS!$B$2:$B$21,$A{r})+COUNTIF(DUPLICADOS!$C$2:$C$21,$A{r})>0,"Sí","No")'))
-    cm.cell(row=r, column=32, value=(
-        f"=IFERROR(INDEX('HUBSPOT AUDIT'!$U$2:$U$21,MATCH($A{r},'HUBSPOT AUDIT'!$A$2:$A$21,0)),\"\")"))
 style_rows(cm, len(cm_headers), 2, DATA_ROWS + 1)
 cm["AB1"].comment = None  # placeholder to keep openpyxl import consistent
 from openpyxl.comments import Comment
@@ -683,88 +529,38 @@ list_dv(db, "F5", sdr_names, strict=False)
 list_dv(db, "H5", ["(Todos)"] + TIPOS_ORIGEN, strict=False)
 list_dv(db, "J5", ["(Todos)"] + ESTATUS_LIST, strict=False)
 
-BASE5 = ('INTERACCIONES!$D$2:$D$21,IF(Filtro_Evento="(Todos)","<>",Filtro_Evento),'
-         'INTERACCIONES!$F$2:$F$21,IF(Filtro_Aliado="(Todos)","<>",Filtro_Aliado),'
-         'INTERACCIONES!$N$2:$N$21,IF(Filtro_SDR="(Todos)","<>",Filtro_SDR),'
-         'INTERACCIONES!$E$2:$E$21,IF(Filtro_Tipo="(Todos)","<>",Filtro_Tipo),'
-         'INTERACCIONES!$P$2:$P$21,IF(Filtro_Estatus="(Todos)","<>",Filtro_Estatus)')
-
+# Las fórmulas de KPIs (columna C), tabla "KPIs por origen" y tabla "KPIs por SDR"
+# las instala Apps Script (instalarFormulasDashboard_ en 09_InstalarFormulas.gs) —
+# aquí solo dejamos las etiquetas y encabezados para que el archivo pese poco.
 db["A7"] = "KPIs generales"
 db["A7"].font = subtitle_font
 kpi_row = 8
-kpis = [
-    ("Total de contactos únicos (global)", f"=COUNTA('CONTACTOS MAESTROS'!$A$2:$A${DATA_ROWS+1})", None),
-    ("Total de registros/orígenes (filtrado)", f"=COUNTIFS({BASE5})", None),
-    ("Contactos en HubSpot (filtrado)", f'=COUNTIFS({BASE5},INTERACCIONES!$M$2:$M$21,"Sí")', None),
-    ("Contactos no en HubSpot (filtrado)", f'=COUNTIFS({BASE5},INTERACCIONES!$M$2:$M$21,"No")', None),
-    ("% de contactos en HubSpot (filtrado)", "=IFERROR(C10/C9,0)", "0.0%"),
-    ("Contactos asignados a SDR (filtrado)", f'=COUNTIFS({BASE5},INTERACCIONES!$N$2:$N$21,"<>")', None),
-    ("Contactos sin SDR (filtrado)",
-     f'=COUNTIFS({BASE5},INTERACCIONES!$M$2:$M$21,"Sí",INTERACCIONES!$N$2:$N$21,"")', None),
-    ("Aún sin contactar (filtrado)",
-     f'=COUNTIFS({BASE5},INTERACCIONES!$P$2:$P$21,"Pendiente de cargar a HubSpot")'
-     f'+COUNTIFS({BASE5},INTERACCIONES!$P$2:$P$21,"En HubSpot — Sin SDR")'
-     f'+COUNTIFS({BASE5},INTERACCIONES!$P$2:$P$21,"Asignado — Sin contacto")', None),
-    ("Contactados (filtrado)", "=IFERROR(C22-C15,0)", None),
-    ("Con actividad (filtrado)", f'=COUNTIFS({BASE5},INTERACCIONES!$O$2:$O$21,"Sí")', None),
-    ("Sin actividad (filtrado)",
-     f'=COUNTIFS({BASE5},INTERACCIONES!$M$2:$M$21,"Sí",INTERACCIONES!$O$2:$O$21,"No")', None),
-    ("Reuniones generadas (filtrado)", f'=COUNTIFS({BASE5},INTERACCIONES!$P$2:$P$21,"Reunión agendada")', None),
-    ("Negocios generados (filtrado)", f'=COUNTIFS({BASE5},INTERACCIONES!$Q$2:$Q$21,"Sí")', None),
-    ("Convertidos (filtrado)", f'=COUNTIFS({BASE5},INTERACCIONES!$P$2:$P$21,"Convertido")', None),
-    ("Con estatus definido (auxiliar, filtrado)", f'=COUNTIFS({BASE5},INTERACCIONES!$P$2:$P$21,"<>")', None),
-    ("Duplicados detectados (global)", '=COUNTIF(\'CONTACTOS MAESTROS\'!$AC:$AC,"Sí")', None),
+kpi_labels = [
+    "Total de contactos únicos (global)", "Total de registros/orígenes (filtrado)",
+    "Contactos en HubSpot (filtrado)", "Contactos no en HubSpot (filtrado)",
+    "% de contactos en HubSpot (filtrado)", "Contactos asignados a SDR (filtrado)",
+    "Contactos sin SDR (filtrado)", "Aún sin contactar (filtrado)", "Contactados (filtrado)",
+    "Con actividad (filtrado)", "Sin actividad (filtrado)", "Reuniones generadas (filtrado)",
+    "Negocios generados (filtrado)", "Convertidos (filtrado)",
+    "Con estatus definido (auxiliar, filtrado)", "Duplicados detectados (global)",
 ]
-for i, (label, formula, fmt) in enumerate(kpis):
-    r = kpi_row + i
-    db.cell(row=r, column=1, value=label).font = normal_font
-    c = db.cell(row=r, column=3, value=formula)
-    c.font = bold_font
-    if fmt:
-        c.number_format = fmt
+for i, label in enumerate(kpi_labels):
+    db.cell(row=kpi_row + i, column=1, value=label).font = normal_font
 db.cell(row=kpi_row + 8, column=1).comment = Comment(
-    "Contactados = Con estatus definido (fila 22) − Aún sin contactar (fila 15). Incluye los marcados como "
-    "'Revisión manual'; si se necesita excluirlos, agregar un contador separado y restarlo aquí también.",
-    "Regcheq CRM")
+    "Contactados = Con estatus definido − Aún sin contactar. Incluye los marcados como 'Revisión manual'; "
+    "si se necesita excluirlos, agregar un contador separado y restarlo aquí también.", "Regcheq CRM")
 
-origen_row0 = kpi_row + len(kpis) + 2
+origen_row0 = kpi_row + len(kpi_labels) + 2
 db.cell(row=origen_row0 - 1, column=1, value="KPIs por origen").font = subtitle_font
 origen_headers = ["Origen", "Contactos", "En HubSpot", "Asignados", "Contactados", "Reuniones"]
-write_headers(db, origen_headers, row=origen_row0,
-              widths=None)
-for i, (eid, nombre, *_rest) in enumerate(eventos_seed):
-    r = origen_row0 + 1 + i
-    db.cell(row=r, column=1, value=f'=IFERROR(INDEX(EVENTOS!$B$2:$B$26,MATCH("{eid}",EVENTOS!$A$2:$A$26,0)),"")')
-    db.cell(row=r, column=2, value=f'=IFERROR(COUNTIF(INTERACCIONES!$C$2:$C$21,"{eid}"),0)')
-    db.cell(row=r, column=3, value=f'=IFERROR(COUNTIFS(INTERACCIONES!$C$2:$C$21,"{eid}",INTERACCIONES!$M$2:$M$21,"Sí"),0)')
-    db.cell(row=r, column=4, value=f'=IFERROR(COUNTIFS(INTERACCIONES!$C$2:$C$21,"{eid}",INTERACCIONES!$N$2:$N$21,"<>"),0)')
-    db.cell(row=r, column=5, value=(
-        f'=IFERROR(COUNTIFS(INTERACCIONES!$C$2:$C$21,"{eid}",INTERACCIONES!$P$2:$P$21,"Contactado")'
-        f'+COUNTIFS(INTERACCIONES!$C$2:$C$21,"{eid}",INTERACCIONES!$P$2:$P$21,"Respondió")'
-        f'+COUNTIFS(INTERACCIONES!$C$2:$C$21,"{eid}",INTERACCIONES!$P$2:$P$21,"Reunión agendada")'
-        f'+COUNTIFS(INTERACCIONES!$C$2:$C$21,"{eid}",INTERACCIONES!$P$2:$P$21,"Convertido"),0)'))
-    db.cell(row=r, column=6, value=f'=IFERROR(COUNTIFS(INTERACCIONES!$C$2:$C$21,"{eid}",INTERACCIONES!$P$2:$P$21,"Reunión agendada"),0)')
-style_rows(db, len(origen_headers), origen_row0 + 1, origen_row0 + len(eventos_seed))
+write_headers(db, origen_headers, row=origen_row0, widths=None)
 
 sdr_row0 = origen_row0 + len(eventos_seed) + 3
 db.cell(row=sdr_row0 - 1, column=1, value="KPIs por SDR").font = subtitle_font
 sdr_headers = ["SDR", "Leads asignados", "Contactados", "No contactados", "% avance", "Reuniones"]
 write_headers(db, sdr_headers, row=sdr_row0, widths=None)
-for i, (nombre, oid, activo) in enumerate(sdrs):
-    r = sdr_row0 + 1 + i
-    db.cell(row=r, column=1, value=nombre)
-    db.cell(row=r, column=2, value=f'=IFERROR(COUNTIF(INTERACCIONES!$N$2:$N$21,"{nombre}"),0)')
-    db.cell(row=r, column=3, value=(
-        f'=IFERROR(COUNTIFS(INTERACCIONES!$N$2:$N$21,"{nombre}",INTERACCIONES!$P$2:$P$21,"Contactado")'
-        f'+COUNTIFS(INTERACCIONES!$N$2:$N$21,"{nombre}",INTERACCIONES!$P$2:$P$21,"Respondió")'
-        f'+COUNTIFS(INTERACCIONES!$N$2:$N$21,"{nombre}",INTERACCIONES!$P$2:$P$21,"Reunión agendada")'
-        f'+COUNTIFS(INTERACCIONES!$N$2:$N$21,"{nombre}",INTERACCIONES!$P$2:$P$21,"Convertido"),0)'))
-    db.cell(row=r, column=4, value=f'=IFERROR(COUNTIFS(INTERACCIONES!$N$2:$N$21,"{nombre}",INTERACCIONES!$P$2:$P$21,"Asignado — Sin contacto"),0)')
-    db.cell(row=r, column=5, value=f"=IFERROR(C{r}/B{r},0)").number_format = "0.0%"
-    db.cell(row=r, column=6, value=f'=IFERROR(COUNTIFS(INTERACCIONES!$N$2:$N$21,"{nombre}",INTERACCIONES!$P$2:$P$21,"Reunión agendada"),0)')
-style_rows(db, len(sdr_headers), sdr_row0 + 1, sdr_row0 + len(sdrs))
 db.freeze_panes = "A6"
-print("DASHBOARD listo")
+print("DASHBOARD listo — corre 'Instalar/extender fórmulas' desde el menú al abrir el Sheet.")
 
 # =============================================================================
 # Nombres definidos (para las fórmulas del Dashboard)

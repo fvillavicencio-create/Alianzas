@@ -99,6 +99,19 @@ function getAlertThresholds_() {
   return { amarillo, rojo };
 }
 
+/** Igual que getAlertThresholds_ pero devuelve las direcciones de celda (para fórmulas en vivo). */
+function getAlertThresholdCells_() {
+  const cfg = sheet_(SHEETS.CONFIG);
+  const colA = cfg.getRange(1, 1, cfg.getLastRow(), 1).getValues();
+  let amarillo, rojo;
+  colA.forEach((row, i) => {
+    if (String(row[0]).indexOf('alerta 🟡') !== -1) amarillo = `CONFIGURACION!$B$${i + 1}`;
+    if (String(row[0]).indexOf('alerta 🔴') !== -1) rojo = `CONFIGURACION!$B$${i + 1}`;
+  });
+  if (!amarillo || !rojo) throw new Error('No se encontraron los umbrales de alerta en CONFIGURACIÓN.');
+  return { amarillo, rojo };
+}
+
 function getPortalId_() {
   const cfg = sheet_(SHEETS.CONFIG);
   const colA = cfg.getRange(1, 1, cfg.getLastRow(), 2).getValues();

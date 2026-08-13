@@ -117,7 +117,6 @@ function crearContactoMaestro_(campos, emailNorm, telNorm, nombre, apellido, emp
   const cm = sheet_(SHEETS.CONTACTOS);
   const lastRow = lastDataRow_(cm);
   const targetRow = lastRow + 1;
-  if (lastRow >= 2) copyRowFormulas_(cm, lastRow, targetRow);
   const masterId = nextId_(cm, COL.CONTACTOS.MASTER_ID, 'MC-', 6);
 
   cm.getRange(targetRow, COL.CONTACTOS.MASTER_ID).setValue(masterId);
@@ -167,7 +166,6 @@ function agregarInteraccion_(masterId, eventId, baseId, filaOriginal, emailApare
   const it = sheet_(SHEETS.INTERACCIONES);
   const lastRow = lastDataRow_(it);
   const targetRow = lastRow + 1;
-  if (lastRow >= 2) copyRowFormulas_(it, lastRow, targetRow);
   const interaccionId = nextId_(it, COL.INTERACCIONES.INTERACCION_ID, 'INT-', 6);
 
   it.getRange(targetRow, COL.INTERACCIONES.INTERACCION_ID).setValue(interaccionId);
@@ -184,7 +182,6 @@ function registrarBaseOriginal_(baseId, cfg, nombrePestana, numRegistros, numNue
   const bo = sheet_(SHEETS.BASES);
   const lastRow = lastDataRow_(bo);
   const targetRow = lastRow + 1;
-  if (lastRow >= 2) copyRowFormulas_(bo, lastRow, targetRow);
 
   bo.getRange(targetRow, COL.BASES.BASE_ID).setValue(baseId);
   bo.getRange(targetRow, COL.BASES.NOMBRE).setValue(cfg.fuenteOriginal || nombrePestana);

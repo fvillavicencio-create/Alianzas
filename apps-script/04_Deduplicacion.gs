@@ -106,7 +106,6 @@ function detectarDuplicados() {
 
   let row = lastDupRow + 1;
   nuevosPares.forEach(([mcA, mcB, tipo, campo, valor, confianza]) => {
-    if (row > 2) copyRowFormulas_(du, row - 1, row);
     const parId = nextId_(du, COL.DUPLICADOS.PAR_ID, 'DUP-', 6);
     du.getRange(row, COL.DUPLICADOS.PAR_ID, 1, 6)
       .setValues([[parId, mcA, mcB, tipo, campo, valor]]);

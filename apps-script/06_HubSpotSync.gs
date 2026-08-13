@@ -182,9 +182,7 @@ function actualizarHubSpot() {
       const c = encontradosMap[f.email];
       let row = auditIndex[f.masterId];
       if (!row) {
-        const newLast = lastDataRow_(audit);
-        row = newLast + 1;
-        if (newLast >= 2) copyRowFormulas_(audit, newLast, row);
+        row = lastDataRow_(audit) + 1;
         auditIndex[f.masterId] = row;
         audit.getRange(row, COL.AUDIT.MASTER_ID).setValue(f.masterId);
       }
